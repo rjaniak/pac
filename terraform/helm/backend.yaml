@@ -1,0 +1,32 @@
+image:
+  # TODO: from harbor.prodyna.com
+  repository: rjaniak/private/conference-backend
+  pullPolicy: IfNotPresent
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+ingress:
+  enabled: true
+  hosts:
+    - host: backend.minikube
+      paths:
+        # TODO: set /api
+        - "/"
+  #annotations:
+  #  nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+  #  nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+#serverBlock: |-
+#  server {
+#    listen 0.0.0.0:8080;
+#    location /status {
+#      stub_status on;
+#    }
+#    location / {
+#      return 200 "Hello from backend";
+#    }
+#  }
+#imagePullSecret:
+#  - name: dockerhub-pullsecret

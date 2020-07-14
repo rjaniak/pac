@@ -1,0 +1,30 @@
+keycloak:
+  existingSecret: keycloak-user
+  persistence:
+    dbVendor: mariadb
+    dbName: keycloak
+    dbHost: keycloak-mariadb
+    dbPort: 3306
+    existingSecret: keycloak-mariadb-access
+    existingSecretUsernameKey: username
+    existingSecretPasswordKey: password
+  ingress:
+    enabled: true
+    path: /
+    servicePort: http
+    hosts:
+      - keycloak.minikube
+    #tls: []
+    # - hosts:
+    #     - keycloak.minikube
+    #   secretName: tls-secret
+  # TODO: fix readiness probe
+  #extraVolumes: |
+  #  - name: realm-local
+  #    secret:
+  #      secretName: keycloak-realm-local
+  #extraVolumeMounts: |
+  #  - name: realm-local
+  #    mountPath: "/realm/"
+  #    readOnly: true
+  #extraArgs: -Dkeycloak.import=/realm/realm-local.json

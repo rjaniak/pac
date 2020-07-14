@@ -1,0 +1,5 @@
+.idea/
+pac.iml
+terraform/.terraform/
+terraform/*.tfstate*
+terraform/planfile
