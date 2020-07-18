@@ -1,17 +1,15 @@
 core:
-  # TODO: Standalone scalable?
-  standalone: true
-  numberOfServers: 1
   persistentVolume:
     size: 1Gi
-  extraVars:
-    - name: NEO4J_dbms_mode
-      value: "SINGLE"
-    - name: NEO4J_metrics_enabled
-      value: "true"
-    - name: NEO4J_metrics_prometheus_enabled
-      value: "true"
-    - name: NEO4J_metrics_prometheus_endpoint
-      value: "0.0.0.0:2004"
+metrics:
+  prometheus:
+    enabled: true
+    endpoint: 0.0.0.0:2004
+readReplica:
+  autoscaling:
+    enabled: true
+    targetAverageUtilization: 70
+    minReplicas: 1
+    maxReplicas: 3
 acceptLicenseAgreement: "yes"
 imageTag: "4.1.0-enterprise"

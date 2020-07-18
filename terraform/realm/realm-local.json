@@ -27,7 +27,6 @@
       "webOrigins": []
     }
   ],
-  # TODO: roles and users necessary?
   "roles": {
     "realm": [
       {

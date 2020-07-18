@@ -1,5 +1,7 @@
 keycloak:
   existingSecret: keycloak-user
+  username: admin
+  existingSecretKey: password
   persistence:
     dbVendor: mariadb
     dbName: keycloak
@@ -18,13 +20,12 @@ keycloak:
     # - hosts:
     #     - keycloak.minikube
     #   secretName: tls-secret
-  # TODO: fix readiness probe
-  #extraVolumes: |
-  #  - name: realm-local
-  #    secret:
-  #      secretName: keycloak-realm-local
-  #extraVolumeMounts: |
-  #  - name: realm-local
-  #    mountPath: "/realm/"
-  #    readOnly: true
-  #extraArgs: -Dkeycloak.import=/realm/realm-local.json
+  extraVolumes: |
+    - name: realm-local
+      secret:
+        secretName: keycloak-realm-local
+  extraVolumeMounts: |
+    - name: realm-local
+      mountPath: "/realm/"
+      readOnly: true
+  extraArgs: -Dkeycloak.import=/realm/realm-local.json

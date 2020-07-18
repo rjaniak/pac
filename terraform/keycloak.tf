@@ -61,7 +61,7 @@ resource "kubernetes_secret" "keycloak-realm-local" {
   }
 
   data = {
-    "realm-local.json" = file("realm/realm-local.yaml")
+    "realm-local.json" = file("realm/realm-local.json")
   }
 }
 
