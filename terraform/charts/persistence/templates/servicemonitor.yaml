@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: neo4j-metrics-servicemonitor
+  namespace: {{ .Values.metadata.namespace }}
+  labels:
+    release: {{ .Values.metadata.labels.release }}
+spec:
+  endpoints:
+    - path: /metrics
+      port: prometheus
+      interval: 15s
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: neo4j

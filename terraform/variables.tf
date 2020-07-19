@@ -24,12 +24,12 @@ variable "frontend_namespace" {
   default = "frontend"
 }
 
-variable "prometheus_namespace" {
+variable "monitoring_namespace" {
   type = string
-  default = "prometheus"
+  default = "monitoring"
 }
 
-variable "grafana_namespace" {
+variable "prometheus_helm_release" {
   type = string
-  default = "grafana"
+  default = "prometheus"
 }
