@@ -2,6 +2,8 @@ image:
   # TODO: from harbor.prodyna.com
   repository: rjaniak/private/conference-backend
   pullPolicy: IfNotPresent
+serviceAccount:
+  name: backend
 autoscaling:
   enabled: true
   minReplicas: 1

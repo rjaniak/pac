@@ -20,6 +20,20 @@ resource "kubernetes_secret" "grafana-access" {
   }
 }
 
+resource "kubernetes_config_map" "grafana-dashboard" {
+  metadata {
+    name = "grafana-dashboard"
+    namespace = kubernetes_namespace.monitoring.metadata[0].name
+    labels = {
+      grafana_dashboard = "dashboard"
+    }
+  }
+
+  data = {
+    "k8s-dashboard.json" = file("resources/grafana-dashboard.json")
+  }
+}
+
 resource "helm_release" "prometheus" {
   chart = "stable/prometheus-operator"
   name = var.prometheus_helm_release

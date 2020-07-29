@@ -17,26 +17,30 @@ resource "kubernetes_namespace" "backend" {
   type = "kubernetes.io/dockerconfigjson"
 }*/
 
+data "template_file" "backend-properties" {
+  template = file("resources/backend.properties")
+
+  vars = {
+    namespace = kubernetes_namespace.persistence.metadata[0].name
+    username = kubernetes_secret.neo4j-access.data.username
+    password = kubernetes_secret.neo4j-access.data.password
+  }
+}
+
 resource "kubernetes_config_map" "backend-config-map" {
   metadata {
     name = "conference-backend"
     namespace  = kubernetes_namespace.backend.metadata[0].name
   }
 
-  # TODO: Set data with |-  ?
   data = {
-    "application.properties" = <<EOF
-server.port=8080
-spring.data.neo4j.uri=bolt://neo4j-neo4j
-spring.data.neo4j.username=kubernetes_secret.neo4j-access.data.username
-spring.data.neo4j.password=kubernetes_secret.neo4j-access.data.password
-EOF
+    "application.properties" = data.template_file.backend-properties.rendered
   }
 }
 
-resource "kubernetes_cluster_role" "role-config-maps" {
+resource "kubernetes_cluster_role" "backend-role-config-map" {
   metadata {
-    name = "role-config-maps"
+    name = "backend-role-config-map"
   }
 
   rule {
@@ -46,14 +50,14 @@ resource "kubernetes_cluster_role" "role-config-maps" {
   }
 }
 
-resource "kubernetes_cluster_role_binding" "role-config-maps-binding" {
+resource "kubernetes_cluster_role_binding" "backend-role-binding-config-map" {
   metadata {
-    name = "role-config-maps-binding"
+    name = "backend-role-binding-config-map"
   }
   role_ref {
     api_group = "rbac.authorization.k8s.io"
     kind      = "ClusterRole"
-    name      = "role-config-maps"
+    name      = "backend-role-config-map"
   }
   subject {
     kind      = "ServiceAccount"
