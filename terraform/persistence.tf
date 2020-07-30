@@ -1,6 +1,6 @@
 resource "kubernetes_namespace" "persistence" {
   metadata {
-    name = var.persistence_namespace
+    name = local.namespace-persistence
   }
 }
 
@@ -15,7 +15,7 @@ resource "kubernetes_secret" "neo4j-access" {
     namespace = kubernetes_namespace.persistence.metadata[0].name
   }
   data = {
-    username = "neo4j"
+    username = local.neo4j-username
     password = random_password.neo4j-password.result
   }
 }
@@ -51,6 +51,6 @@ resource "helm_release" "neo4j-metrics-servicemonitor" {
   }
   set {
     name = "metadata.labels.release"
-    value = var.prometheus_helm_release
+    value = local.helm-release-name-prometheus
   }
 }

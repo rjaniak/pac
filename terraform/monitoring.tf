@@ -1,6 +1,6 @@
 resource "kubernetes_namespace" "monitoring" {
   metadata {
-    name = var.monitoring_namespace
+    name = local.namespace-monitoring
   }
 }
 
@@ -15,7 +15,7 @@ resource "kubernetes_secret" "grafana-access" {
     namespace = kubernetes_namespace.monitoring.metadata[0].name
   }
   data = {
-    username = "admin"
+    username = local.grafana-username
     password = random_password.grafana-password.result
   }
 }
@@ -36,7 +36,7 @@ resource "kubernetes_config_map" "grafana-dashboard" {
 
 resource "helm_release" "prometheus" {
   chart = "stable/prometheus-operator"
-  name = var.prometheus_helm_release
+  name = local.helm-release-name-prometheus
   namespace = kubernetes_namespace.monitoring.metadata[0].name
 
   values = [

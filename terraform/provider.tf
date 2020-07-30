@@ -6,6 +6,9 @@ provider "kubernetes" {
 provider "random" {
   version = "~> 2.2"
 }
+provider "template" {
+  version = "~> 2.1"
+}
 
 provider "tls" {
   version = "~> 2.1"
@@ -17,10 +20,3 @@ provider "helm" {
     config_context = "minikube"
   }
 }
-
-// TODO --> besser stable prometheus-operator inkl. grafana
-/*provider "grafana" {
-  version = "~> 1.5"
-  url  = "https://conference-app.com/grafana/"
-  auth = random_password.grafana_password.result
-}*/

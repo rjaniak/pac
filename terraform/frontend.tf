@@ -1,6 +1,6 @@
 resource "kubernetes_namespace" "frontend" {
   metadata {
-    name = var.frontend_namespace
+    name = local.namespace-frontend
   }
 }
 

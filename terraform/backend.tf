@@ -1,6 +1,6 @@
 resource "kubernetes_namespace" "backend" {
   metadata {
-    name = var.backend_namespace
+    name = local.namespace-backend
   }
 }
 
@@ -74,4 +74,13 @@ resource "helm_release" "backend" {
   values = [
     file("helm/backend.yaml")
   ]
+
+  set {
+    name = "servicemonitor.metadata.namespace"
+    value = kubernetes_namespace.persistence.metadata[0].name
+  }
+  set {
+    name = "servicemonitor.metadata.labels.release"
+    value = local.helm-release-name-prometheus
+  }
 }

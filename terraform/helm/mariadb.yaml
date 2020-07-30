@@ -1,5 +1,2 @@
-db:
-  name: keycloak
-  user: keycloak
 slave:
   replicas: 0

@@ -2,8 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: backend-metrics-servicemonitor
+  namespace: {{ .Values.servicemonitor.metadata.namespace }}
   labels:
-    release: prometheus
+    release: {{ .Values.servicemonitor.metadata.labels.release }}
 spec:
   endpoints:
     - path: /actuator/prometheus

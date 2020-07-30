@@ -1,24 +1,24 @@
 resource "kubernetes_namespace" "keycloak" {
   metadata {
-    name = var.keycloak_namespace
+    name = local.namespace-keycloak
   }
 }
 
-resource "random_password" "mariadb-password" {
+resource "random_password" "keycloak-mariadb-password" {
   length = 16
   special = false
 }
 
-resource "kubernetes_secret" "mariadb-access" {
+resource "kubernetes_secret" "keycloak-mariadb-access" {
   metadata {
     name = "keycloak-mariadb-access"
     namespace = kubernetes_namespace.keycloak.metadata[0].name
   }
 
   data = {
-    "username" = "keycloak"
-    "database" = "keycloak"
-    "password" = random_password.mariadb-password.result
+    database = local.keycloak-mariadb-database
+    username = local.keycloak-mariadb-username
+    password = random_password.keycloak-mariadb-password.result
   }
 }
 
@@ -33,24 +33,33 @@ resource "helm_release" "mariadb" {
   ]
 
   set {
+    name = "db.name"
+    value = kubernetes_secret.keycloak-mariadb-access.data.database
+  }
+  set {
+    name = "db.user"
+    value = kubernetes_secret.keycloak-mariadb-access.data.username
+  }
+  set {
     name = "db.password"
-    value = random_password.mariadb-password.result
+    value = kubernetes_secret.keycloak-mariadb-access.data.password
   }
 }
 
-resource "random_password" "keycloak-user" {
+resource "random_password" "keycloak-password" {
   length = 16
   special = false
 }
 
-resource "kubernetes_secret" "keycloak-user" {
+resource "kubernetes_secret" "keycloak-access" {
   metadata {
-    name = "keycloak-user"
+    name = "keycloak-access"
     namespace = kubernetes_namespace.keycloak.metadata[0].name
   }
 
   data = {
-    "password" = random_password.keycloak-user.result
+    username = local.keycloak-username
+    password = random_password.keycloak-password.result
   }
 }
 
@@ -72,10 +81,21 @@ resource "helm_release" "keycloak" {
 
   chart = "keycloak"
   name = "keycloak"
+  version = "8.2.2"
   namespace = kubernetes_namespace.keycloak.metadata[0].name
   repository = local.helm_repository_codecentric
 
   values = [
     file("helm/keycloak.yaml")
   ]
+
+  set {
+    name = "keycloak.username"
+    value = local.keycloak-username
+  }
+
+  set {
+    name = "keycloak.persistence.dbName"
+    value = local.keycloak-mariadb-database
+  }
 }

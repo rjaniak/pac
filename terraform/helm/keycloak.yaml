@@ -1,10 +1,8 @@
 keycloak:
-  existingSecret: keycloak-user
-  username: admin
+  existingSecret: keycloak-access
   existingSecretKey: password
   persistence:
     dbVendor: mariadb
-    dbName: keycloak
     dbHost: keycloak-mariadb
     dbPort: 3306
     existingSecret: keycloak-mariadb-access

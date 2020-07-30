@@ -15,7 +15,6 @@ ingress:
   hosts:
     - host: backend.minikube
       paths:
-        # TODO: set /api
         - "/"
   #annotations:
   #  nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"

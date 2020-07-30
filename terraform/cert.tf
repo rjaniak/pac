@@ -38,7 +38,6 @@ resource "tls_self_signed_cert" "tls_cert" {
 resource "kubernetes_secret" "tls_secret" {
   metadata {
     name = "tls-secret"
-    namespace = var.conference-namespace
   }
   data = {
     "tls.crt" = tls_self_signed_cert.tls_cert.cert_pem
