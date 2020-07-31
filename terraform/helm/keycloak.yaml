@@ -14,10 +14,10 @@ keycloak:
     servicePort: http
     hosts:
       - keycloak.minikube
-    #tls: []
-    # - hosts:
-    #     - keycloak.minikube
-    #   secretName: tls-secret
+    tls:
+     - hosts:
+         - keycloak.minikube
+       secretName: tls-secret
   extraVolumes: |
     - name: realm-local
       secret:

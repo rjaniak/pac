@@ -34,9 +34,18 @@ resource "kubernetes_config_map" "grafana-dashboard" {
   }
 }
 
+resource "kubernetes_secret" "grafana-tls-secret" {
+  metadata {
+    name = "tls-secret"
+    namespace = kubernetes_namespace.monitoring.metadata[0].name
+  }
+  data = kubernetes_secret.tls-secret.data
+  type = "kubernetes.io/tls"
+}
+
 resource "helm_release" "prometheus" {
   chart = "stable/prometheus-operator"
-  name = local.helm-release-name-prometheus
+  name = "prometheus"
   namespace = kubernetes_namespace.monitoring.metadata[0].name
 
   values = [

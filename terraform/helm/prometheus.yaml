@@ -3,3 +3,7 @@ grafana:
     enabled: true
     hosts:
       - grafana.minikube
+    tls:
+      - secretName: tls-secret
+        hosts:
+          - grafana.minikube

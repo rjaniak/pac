@@ -51,6 +51,6 @@ resource "helm_release" "neo4j-metrics-servicemonitor" {
   }
   set {
     name = "metadata.labels.release"
-    value = local.helm-release-name-prometheus
+    value = helm_release.prometheus.name
   }
 }

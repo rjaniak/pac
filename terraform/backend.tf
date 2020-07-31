@@ -66,6 +66,15 @@ resource "kubernetes_cluster_role_binding" "backend-role-binding-config-map" {
   }
 }
 
+resource "kubernetes_secret" "backend-tls-secret" {
+  metadata {
+    name = "tls-secret"
+    namespace = kubernetes_namespace.backend.metadata[0].name
+  }
+  data = kubernetes_secret.tls-secret.data
+  type = "kubernetes.io/tls"
+}
+
 resource "helm_release" "backend" {
   chart = "charts/backend"
   name = "backend"
@@ -77,10 +86,10 @@ resource "helm_release" "backend" {
 
   set {
     name = "servicemonitor.metadata.namespace"
-    value = kubernetes_namespace.persistence.metadata[0].name
+    value = kubernetes_namespace.backend.metadata[0].name
   }
   set {
     name = "servicemonitor.metadata.labels.release"
-    value = local.helm-release-name-prometheus
+    value = helm_release.prometheus.name
   }
 }

@@ -74,6 +74,15 @@ resource "kubernetes_secret" "keycloak-realm-local" {
   }
 }
 
+resource "kubernetes_secret" "keycloak-tls-secret" {
+  metadata {
+    name = "tls-secret"
+    namespace = kubernetes_namespace.keycloak.metadata[0].name
+  }
+  data = kubernetes_secret.tls-secret.data
+  type = "kubernetes.io/tls"
+}
+
 resource "helm_release" "keycloak" {
   depends_on = [
     helm_release.mariadb

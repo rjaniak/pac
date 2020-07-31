@@ -14,3 +14,7 @@ ingress:
     - host: frontend.minikube
       paths:
         - "/"
+  tls:
+    - secretName: tls-secret
+      hosts:
+        - frontend.minikube
