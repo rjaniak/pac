@@ -12,6 +12,9 @@ autoscaling:
   targetMemoryUtilizationPercentage: 80
 ingress:
   enabled: true
+  annotations: {
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+  }
   hosts:
     - host: backend.minikube
       paths:
