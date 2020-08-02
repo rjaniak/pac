@@ -45,7 +45,7 @@ resource "kubernetes_cluster_role" "backend-role-config-map" {
 
   rule {
     api_groups = [""]
-    resources  = ["configmaps"]
+    resources  = ["configmaps", "pods"]
     verbs      = ["get", "list", "watch"]
   }
 }

@@ -9,7 +9,7 @@ class Header extends Component {
                     <h1 className="headline">Conference App</h1>
                 </div>
                 <div className="col-6">
-                    <img className="logo" src={logo} />
+                    <img className="logo" src={logo} alt="" />
                 </div>
             </div>
         )

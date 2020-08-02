@@ -11,7 +11,7 @@ class Nav extends Component {
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                     <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <div className="navbar-nav">
-                            <NavLink className="nav-item nav-link" exact="true" to="/">Home</NavLink>
+                            <NavLink className="nav-item nav-link" exact to="/">Home</NavLink>
                             <NavLink className="nav-item nav-link" to="/events">Events</NavLink>
                             <NavLink className="nav-item nav-link" to="/persons">Persons</NavLink>
                         </div>
