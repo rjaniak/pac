@@ -1,6 +1,9 @@
 package com.prodyna.conference.backend.service;
 
+import com.prodyna.conference.backend.model.Event;
+import com.prodyna.conference.backend.model.EventDTO;
 import com.prodyna.conference.backend.model.Location;
+import com.prodyna.conference.backend.model.LocationDTO;
 import com.prodyna.conference.backend.repository.LocationRepository;
 import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +27,9 @@ public class LocationService {
     @Autowired
     LocationRepository locationRepository;
 
-    public Location addLocation(Location location) {
+    public Location addLocation(LocationDTO locationDTO) {
+        Location location = new Location();
+        location.setName(locationDTO.getName());
         return locationRepository.save(location);
     }
 
@@ -48,13 +53,14 @@ public class LocationService {
         return locations;
     }
 
-    public Location updateLocation(Long id, Location location) {
-        Optional<Location> oldLocation = locationRepository.findById(id);
-        if (!oldLocation.isPresent()) {
+    public Location updateLocation(Long id, LocationDTO locationDTO) {
+        Optional<Location> locationOptional = locationRepository.findById(id);
+        if (!locationOptional.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Location found with id [" + id + "].");
         }
-        location.setId(id);
+        Location location = locationOptional.get();
+        location.setName(locationDTO.getName());
         return locationRepository.save(location);
     }
 }

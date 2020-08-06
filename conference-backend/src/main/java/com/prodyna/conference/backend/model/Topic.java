@@ -12,24 +12,25 @@ import java.util.List;
  */
 @Data
 @NodeEntity
-public class Event {
+public class Topic {
     @Id
     @GeneratedValue
     private Long id;
 
     private String name;
 
-    private String begin;
-
-    private String end;
-
-    @JsonIgnoreProperties({"events","rooms"})
+    @JsonIgnoreProperties({"childTopics", "parentTopics", "talks"})
     @EqualsAndHashCode.Exclude
-    @Relationship(type = "TAKES_PLACE_IN")
-    private Location location;
+    @Relationship(type = "RELATED_TO", direction = Relationship.INCOMING)
+    private List<Topic> childTopics;
+
+    @JsonIgnoreProperties({"childTopics", "parentTopics", "talks"})
+    @EqualsAndHashCode.Exclude
+    @Relationship(type = "RELATED_TO")
+    private List<Topic> parentTopics;
 
     @JsonIgnoreProperties({"event", "persons", "room", "timeSlot", "topics"})
     @EqualsAndHashCode.Exclude
-    @Relationship(type = "PART_OF", direction = Relationship.INCOMING)
+    @Relationship(type = "IS_ABOUT", direction = Relationship.INCOMING)
     private List<Talk> talks;
 }

@@ -15,20 +15,25 @@ import java.util.List;
  */
 @Data
 @NodeEntity
-public class Location {
+public class Room {
     @Id
     @GeneratedValue
     private Long id;
 
     private String name;
 
-    @JsonIgnoreProperties({"location", "talks"})
+    @JsonIgnoreProperties({"talk", "room"})
     @EqualsAndHashCode.Exclude
-    @Relationship(type = "TAKES_PLACE_IN", direction = Relationship.INCOMING)
-    private List<Event> events;
+    @Relationship(type = "BLOCKS", direction = Relationship.INCOMING)
+    private List<TimeSlot> timeSlots;
 
-    @JsonIgnoreProperties({"timeSlots", "location", "talks"})
+    @JsonIgnoreProperties({"events","rooms"})
     @EqualsAndHashCode.Exclude
-    @Relationship(type = "IS_IN", direction = Relationship.INCOMING)
-    private List<Room> rooms;
+    @Relationship(type = "IS_IN")
+    private Location location;
+
+    @JsonIgnoreProperties({"event", "persons", "room", "timeSlot", "topics"})
+    @EqualsAndHashCode.Exclude
+    @Relationship(type = "HELD_IN", direction = Relationship.INCOMING)
+    private List<Talk> talks;
 }

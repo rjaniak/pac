@@ -1,9 +1,6 @@
 package com.prodyna.conference.backend.service;
 
-import com.prodyna.conference.backend.model.Event;
-import com.prodyna.conference.backend.model.EventDTO;
-import com.prodyna.conference.backend.model.Location;
-import com.prodyna.conference.backend.model.TakesPlaceInRelationship;
+import com.prodyna.conference.backend.model.*;
 import com.prodyna.conference.backend.repository.EventRepository;
 import com.prodyna.conference.backend.repository.LocationRepository;
 import io.micrometer.core.annotation.Timed;
@@ -32,13 +29,8 @@ public class EventService {
     LocationRepository locationRepository;
 
     public Event addEvent(EventDTO eventDTO) {
-        Event event = new Event();
-        event.setName(eventDTO.getName());
-        event.setBegin(eventDTO.getBegin());
-        event.setEnd(eventDTO.getEnd());
-        Event newEvent = eventRepository.save(event);
-        addTakesPlaceInLocation(newEvent, eventDTO.getLocationId());
-        return eventRepository.save(newEvent);
+        Event event = mapToEvent(eventDTO, new Event());
+        return eventRepository.save(event);
     }
 
     public void deleteEvent(Long id) {
@@ -67,25 +59,25 @@ public class EventService {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Event found with id [" + id + "].");
         }
-        Event event = eventOptional.get();
-        event.setId(id);
-        event.setName(eventDTO.getName());
-        event.setBegin(eventDTO.getBegin());
-        event.setEnd(eventDTO.getEnd());
-        addTakesPlaceInLocation(event, eventDTO.getLocationId());
+        Event event = mapToEvent(eventDTO, eventOptional.get());
         return eventRepository.save(event);
     }
 
-    private Event addTakesPlaceInLocation(Event event, Long locationId) {
-        Optional<Location> locationOptional = locationRepository.findById(locationId);
-        if (locationOptional.isPresent()) {
-            TakesPlaceInRelationship takesPlaceInRelationship = new TakesPlaceInRelationship();
-            takesPlaceInRelationship.setEvent(event);
-            takesPlaceInRelationship.setLocation(locationOptional.get());
-            event.setTakesPlaceInRelationship(takesPlaceInRelationship);
+    private Event addLocation(Event event, Long locationId) {
+        Optional<Location> location = locationRepository.findById(locationId);
+        if (location.isPresent()) {
+            event.setLocation(location.get());
         } else {
-            event.setTakesPlaceInRelationship(null);
+            event.setLocation(null);
         }
+        return event;
+    }
+
+    private Event mapToEvent(EventDTO eventDTO, Event event) {
+        event.setName(eventDTO.getName());
+        event.setBegin(eventDTO.getBegin());
+        event.setEnd(eventDTO.getEnd());
+        event = addLocation(event, eventDTO.getLocationId());
         return event;
     }
 }
