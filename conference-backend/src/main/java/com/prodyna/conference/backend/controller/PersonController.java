@@ -5,6 +5,7 @@ import com.prodyna.conference.backend.model.PersonDTO;
 import com.prodyna.conference.backend.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,18 +35,21 @@ public class PersonController {
     }
 
     @PostMapping
+    @Secured("ROLE_USER")
     public Person addPerson(@Valid @RequestBody PersonDTO personDTO, Errors errors) {
         validate(personDTO, errors);
         return personService.addPerson(personDTO);
     }
 
     @PutMapping("{id}")
+    @Secured("ROLE_USER")
     public Person updatePerson(@PathVariable Long id, @Valid @RequestBody PersonDTO personDTO, Errors errors) {
         validate(personDTO, errors);
         return personService.updatePerson(id, personDTO);
     }
 
     @DeleteMapping("{id}")
+    @Secured("ROLE_USER")
     public void deletePerson(@PathVariable Long id) {
         personService.deletePerson(id);
     }

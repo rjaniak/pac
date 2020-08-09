@@ -5,6 +5,7 @@ import com.prodyna.conference.backend.model.LocationDTO;
 import com.prodyna.conference.backend.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,18 +35,21 @@ public class LocationController {
     }
 
     @PostMapping
+    @Secured("ROLE_USER")
     public Location addLocation(@Valid @RequestBody LocationDTO locationDTO, Errors errors) {
         validate(locationDTO, errors);
         return locationService.addLocation(locationDTO);
     }
 
     @PutMapping("{id}")
+    @Secured("ROLE_USER")
     public Location updateLocation(@PathVariable Long id, @Valid @RequestBody LocationDTO locationDTO, Errors errors) {
         validate(locationDTO, errors);
         return locationService.updateLocation(id, locationDTO);
     }
 
     @DeleteMapping("{id}")
+    @Secured("ROLE_USER")
     public void deleteLocation(@PathVariable Long id) {
         locationService.deleteLocation(id);
     }

@@ -63,14 +63,14 @@ resource "kubernetes_secret" "keycloak-access" {
   }
 }
 
-resource "kubernetes_secret" "keycloak-realm-local" {
+resource "kubernetes_secret" "keycloak-realm-pac" {
   metadata {
-    name = "keycloak-realm-local"
+    name = "keycloak-realm-pac"
     namespace = kubernetes_namespace.keycloak.metadata[0].name
   }
 
   data = {
-    "realm-local.json" = file("realm/realm-local.json")
+    "realm-pac.json" = file("realm/realm-pac.json")
   }
 }
 

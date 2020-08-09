@@ -19,11 +19,11 @@ keycloak:
          - keycloak.minikube
        secretName: tls-secret
   extraVolumes: |
-    - name: realm-local
+    - name: realm-pac
       secret:
-        secretName: keycloak-realm-local
+        secretName: keycloak-realm-pac
   extraVolumeMounts: |
-    - name: realm-local
+    - name: realm-pac
       mountPath: "/realm/"
       readOnly: true
-  extraArgs: -Dkeycloak.import=/realm/realm-local.json
+  extraArgs: -Dkeycloak.import=/realm/realm-pac.json

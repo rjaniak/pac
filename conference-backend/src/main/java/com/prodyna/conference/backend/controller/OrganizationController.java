@@ -5,6 +5,7 @@ import com.prodyna.conference.backend.model.OrganizationDTO;
 import com.prodyna.conference.backend.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,18 +35,21 @@ public class OrganizationController {
     }
 
     @PostMapping
+    @Secured("ROLE_USER")
     public Organization addOrganization(@Valid @RequestBody OrganizationDTO organizationDTO, Errors errors) {
         validate(organizationDTO, errors);
         return organizationService.addOrganization(organizationDTO);
     }
 
     @PutMapping("{id}")
+    @Secured("ROLE_USER")
     public Organization updateOrganization(@PathVariable Long id, @Valid @RequestBody OrganizationDTO organizationDTO, Errors errors) {
         validate(organizationDTO, errors);
         return organizationService.updateOrganization(id, organizationDTO);
     }
 
     @DeleteMapping("{id}")
+    @Secured("ROLE_USER")
     public void deleteOrganization(@PathVariable Long id) {
         organizationService.deleteOrganization(id);
     }

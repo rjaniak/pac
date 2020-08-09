@@ -5,6 +5,7 @@ import com.prodyna.conference.backend.model.TopicDTO;
 import com.prodyna.conference.backend.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,18 +35,21 @@ public class TopicController {
     }
 
     @PostMapping
+    @Secured("ROLE_USER")
     public Topic addTopic(@Valid @RequestBody TopicDTO topicDTO, Errors errors) {
         validate(topicDTO, errors);
         return topicService.addTopic(topicDTO);
     }
 
     @PutMapping("{id}")
+    @Secured("ROLE_USER")
     public Topic updateTopic(@PathVariable Long id, @Valid @RequestBody TopicDTO topicDTO, Errors errors) {
         validate(topicDTO, errors);
         return topicService.updateTopic(id, topicDTO);
     }
 
     @DeleteMapping("{id}")
+    @Secured("ROLE_USER")
     public void deleteTopic(@PathVariable Long id) {
         topicService.deleteTopic(id);
     }

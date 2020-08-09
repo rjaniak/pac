@@ -5,12 +5,12 @@ import com.prodyna.conference.backend.model.TalkDTO;
 import com.prodyna.conference.backend.service.TalkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -38,18 +38,21 @@ public class TalkController {
     }
 
     @PostMapping
+    @Secured("ROLE_USER")
     public Talk addTalk(@Valid @RequestBody TalkDTO talkDTO, Errors errors) {
         validate(talkDTO, errors);
         return talkService.addTalk(talkDTO);
     }
 
     @PutMapping("{id}")
+    @Secured("ROLE_USER")
     public Talk updateTalk(@PathVariable Long id, @Valid @RequestBody TalkDTO talkDTO, Errors errors) {
         validate(talkDTO, errors);
         return talkService.updateTalk(id, talkDTO);
     }
 
     @DeleteMapping("{id}")
+    @Secured("ROLE_USER")
     public void deleteTalk(@PathVariable Long id) {
         talkService.deleteTalk(id);
     }

@@ -5,10 +5,8 @@ import com.prodyna.conference.backend.model.EventDTO;
 import com.prodyna.conference.backend.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,9 +14,7 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -42,22 +38,25 @@ public class EventController {
     }
 
     @PostMapping
+    @Secured("ROLE_USER")
     public Event addEvent(@Valid @RequestBody EventDTO eventDTO, Errors errors) {
         validate(eventDTO, errors);
         return eventService.addEvent(eventDTO);
     }
 
     @PutMapping("{id}")
+    @Secured("ROLE_USER")
     public Event updateEvent(@PathVariable Long id, @Valid @RequestBody EventDTO eventDTO, Errors errors) {
         validate(eventDTO, errors);
         return eventService.updateEvent(id, eventDTO);
     }
 
     @DeleteMapping("{id}")
+    @Secured("ROLE_USER")
     public void deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);
     }
-    
+
     private void validate(EventDTO eventDTO, Errors errors) {
         if (!errors.hasErrors()) {
             // Input is basically correct, but now perform specific validation
