@@ -1,6 +1,19 @@
 core:
+  standalone: true
   persistentVolume:
     size: 1Gi
+  additionalVolumes:
+    - name: dataimport
+      configMap:
+        name: "neo4j-csv-data"
+    - name: cypherqueries
+      configMap:
+        name: "neo4j-cypher-file"
+  additionalVolumeMounts:
+    - name: dataimport
+      mountPath: "/var/lib/neo4j/import/"
+    - name: cypherqueries
+      mountPath: "/var/lib/neo4j/queries/"
 metrics:
   prometheus:
     enabled: true
@@ -12,4 +25,4 @@ readReplica:
     minReplicas: 1
     maxReplicas: 3
 acceptLicenseAgreement: "yes"
-imageTag: "4.1.0-enterprise"
+imageTag: "4.1.1-enterprise"

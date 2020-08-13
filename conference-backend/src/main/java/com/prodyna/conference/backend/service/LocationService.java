@@ -28,17 +28,22 @@ public class LocationService {
     LocationRepository locationRepository;
 
     public Location addLocation(LocationDTO locationDTO) {
+        if (locationRepository.existsByLocationId(locationDTO.getLocationId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Location with [" + locationDTO.getLocationId() + "] already exists.");
+        }
         Location location = new Location();
+        location.setLocationId(locationDTO.getLocationId());
         location.setName(locationDTO.getName());
         return locationRepository.save(location);
     }
 
-    public void deleteLocation(Long id) {
-        locationRepository.deleteById(id);
+    public void deleteLocation(String id) {
+        locationRepository.deleteByLocationId(id);
     }
 
-    public Location getLocation(Long id) {
-        Optional<Location> location = locationRepository.findById(id);
+    public Location getLocation(String id) {
+        Optional<Location> location = locationRepository.findByLocationId(id);
         if (!location.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Location found with id [" + id + "].");
@@ -53,13 +58,14 @@ public class LocationService {
         return locations;
     }
 
-    public Location updateLocation(Long id, LocationDTO locationDTO) {
-        Optional<Location> locationOptional = locationRepository.findById(id);
+    public Location updateLocation(String id, LocationDTO locationDTO) {
+        Optional<Location> locationOptional = locationRepository.findByLocationId(id);
         if (!locationOptional.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Location found with id [" + id + "].");
         }
         Location location = locationOptional.get();
+        location.setLocationId(locationDTO.getLocationId());
         location.setName(locationDTO.getName());
         return locationRepository.save(location);
     }

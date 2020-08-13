@@ -30,7 +30,7 @@ public class PersonController {
     }
 
     @GetMapping("{id}")
-    public Person getPerson(@PathVariable Long id) {
+    public Person getPerson(@PathVariable String id) {
         return personService.getPerson(id);
     }
 
@@ -43,14 +43,14 @@ public class PersonController {
 
     @PutMapping("{id}")
     @Secured("ROLE_USER")
-    public Person updatePerson(@PathVariable Long id, @Valid @RequestBody PersonDTO personDTO, Errors errors) {
+    public Person updatePerson(@PathVariable String id, @Valid @RequestBody PersonDTO personDTO, Errors errors) {
         validate(personDTO, errors);
         return personService.updatePerson(id, personDTO);
     }
 
     @DeleteMapping("{id}")
     @Secured("ROLE_USER")
-    public void deletePerson(@PathVariable Long id) {
+    public void deletePerson(@PathVariable String id) {
         personService.deletePerson(id);
     }
 

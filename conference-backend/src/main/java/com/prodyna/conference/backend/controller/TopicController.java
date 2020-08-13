@@ -30,7 +30,7 @@ public class TopicController {
     }
 
     @GetMapping("{id}")
-    public Topic getTopic(@PathVariable Long id) {
+    public Topic getTopic(@PathVariable String id) {
         return topicService.getTopic(id);
     }
 
@@ -43,14 +43,14 @@ public class TopicController {
 
     @PutMapping("{id}")
     @Secured("ROLE_USER")
-    public Topic updateTopic(@PathVariable Long id, @Valid @RequestBody TopicDTO topicDTO, Errors errors) {
+    public Topic updateTopic(@PathVariable String id, @Valid @RequestBody TopicDTO topicDTO, Errors errors) {
         validate(topicDTO, errors);
         return topicService.updateTopic(id, topicDTO);
     }
 
     @DeleteMapping("{id}")
     @Secured("ROLE_USER")
-    public void deleteTopic(@PathVariable Long id) {
+    public void deleteTopic(@PathVariable String id) {
         topicService.deleteTopic(id);
     }
 

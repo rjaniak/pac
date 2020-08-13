@@ -20,6 +20,8 @@ public class Room {
     @GeneratedValue
     private Long id;
 
+    private String roomId;
+
     private String name;
 
     @JsonIgnoreProperties({"talk", "room"})
@@ -27,7 +29,7 @@ public class Room {
     @Relationship(type = "BLOCKS", direction = Relationship.INCOMING)
     private List<TimeSlot> timeSlots;
 
-    @JsonIgnoreProperties({"events","rooms"})
+    @JsonIgnoreProperties({"events", "rooms"})
     @EqualsAndHashCode.Exclude
     @Relationship(type = "IS_IN")
     private Location location;

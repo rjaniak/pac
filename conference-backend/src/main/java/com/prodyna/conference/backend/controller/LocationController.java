@@ -30,7 +30,7 @@ public class LocationController {
     }
 
     @GetMapping("{id}")
-    public Location getLocation(@PathVariable Long id) {
+    public Location getLocation(@PathVariable String id) {
         return locationService.getLocation(id);
     }
 
@@ -43,14 +43,14 @@ public class LocationController {
 
     @PutMapping("{id}")
     @Secured("ROLE_USER")
-    public Location updateLocation(@PathVariable Long id, @Valid @RequestBody LocationDTO locationDTO, Errors errors) {
+    public Location updateLocation(@PathVariable String id, @Valid @RequestBody LocationDTO locationDTO, Errors errors) {
         validate(locationDTO, errors);
         return locationService.updateLocation(id, locationDTO);
     }
 
     @DeleteMapping("{id}")
     @Secured("ROLE_USER")
-    public void deleteLocation(@PathVariable Long id) {
+    public void deleteLocation(@PathVariable String id) {
         locationService.deleteLocation(id);
     }
 

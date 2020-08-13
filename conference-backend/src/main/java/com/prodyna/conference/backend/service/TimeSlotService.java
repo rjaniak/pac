@@ -29,6 +29,21 @@ public class TimeSlotService {
         timeSlot.setEndTime(endTime.format(DateTimeFormatter.ISO_TIME));
         timeSlot.setTalk(talk);
         timeSlot.setRoom(talk.getRoom());
+        String timeSlotId = timeSlot.getRoom().getRoomId() + "-" + timeSlot.getDate() + "-"
+                + timeSlot.getStartTime();
+        timeSlot.setTimeSlotId(timeSlotId);
+        return timeSlotRepository.save(timeSlot);
+    }
+
+    public TimeSlot updateTimeSlot(Talk talk, LocalTime startTime, LocalTime endTime) {
+        TimeSlot timeSlot = talk.getTimeSlot();
+        timeSlot.setDate(talk.getDate());
+        timeSlot.setStartTime(startTime.format(DateTimeFormatter.ISO_TIME));
+        timeSlot.setEndTime(endTime.format(DateTimeFormatter.ISO_TIME));
+        timeSlot.setRoom(talk.getRoom());
+        String timeSlotId = timeSlot.getRoom().getRoomId() + "-" + timeSlot.getDate() + "-"
+                + timeSlot.getStartTime();
+        timeSlot.setTimeSlotId(timeSlotId);
         return timeSlotRepository.save(timeSlot);
     }
 }

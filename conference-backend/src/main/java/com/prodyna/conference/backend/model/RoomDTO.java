@@ -1,7 +1,6 @@
 package com.prodyna.conference.backend.model;
 
 import lombok.Data;
-import org.neo4j.ogm.annotation.NodeEntity;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -11,9 +10,12 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class RoomDTO {
+    @NotBlank(message = "Room id is mandatory")
+    private String roomId;
+
     @NotBlank(message = "Name is mandatory")
     private String name;
 
     @NotNull(message = "Location ID is mandatory")
-    Long locationId;
+    String locationId;
 }

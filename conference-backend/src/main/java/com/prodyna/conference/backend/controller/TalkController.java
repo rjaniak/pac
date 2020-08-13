@@ -33,7 +33,7 @@ public class TalkController {
     }
 
     @GetMapping("{id}")
-    public Talk getTalk(@PathVariable Long id) {
+    public Talk getTalk(@PathVariable String id) {
         return talkService.getTalk(id);
     }
 
@@ -46,14 +46,14 @@ public class TalkController {
 
     @PutMapping("{id}")
     @Secured("ROLE_USER")
-    public Talk updateTalk(@PathVariable Long id, @Valid @RequestBody TalkDTO talkDTO, Errors errors) {
+    public Talk updateTalk(@PathVariable String id, @Valid @RequestBody TalkDTO talkDTO, Errors errors) {
         validate(talkDTO, errors);
         return talkService.updateTalk(id, talkDTO);
     }
 
     @DeleteMapping("{id}")
     @Secured("ROLE_USER")
-    public void deleteTalk(@PathVariable Long id) {
+    public void deleteTalk(@PathVariable String id) {
         talkService.deleteTalk(id);
     }
 

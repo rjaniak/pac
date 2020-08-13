@@ -30,7 +30,7 @@ public class OrganizationController {
     }
 
     @GetMapping("{id}")
-    public Organization getOrganization(@PathVariable Long id) {
+    public Organization getOrganization(@PathVariable String id) {
         return organizationService.getOrganization(id);
     }
 
@@ -43,14 +43,14 @@ public class OrganizationController {
 
     @PutMapping("{id}")
     @Secured("ROLE_USER")
-    public Organization updateOrganization(@PathVariable Long id, @Valid @RequestBody OrganizationDTO organizationDTO, Errors errors) {
+    public Organization updateOrganization(@PathVariable String id, @Valid @RequestBody OrganizationDTO organizationDTO, Errors errors) {
         validate(organizationDTO, errors);
         return organizationService.updateOrganization(id, organizationDTO);
     }
 
     @DeleteMapping("{id}")
     @Secured("ROLE_USER")
-    public void deleteOrganization(@PathVariable Long id) {
+    public void deleteOrganization(@PathVariable String id) {
         organizationService.deleteOrganization(id);
     }
 

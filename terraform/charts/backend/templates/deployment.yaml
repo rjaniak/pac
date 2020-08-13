@@ -20,6 +20,10 @@ spec:
       labels:
         {{- include "backend.selectorLabels" . | nindent 8 }}
     spec:
+      hostAliases:
+      - ip: {{ .Values.pod.host.aliases.ip }}
+        hostnames:
+          - "keycloak.minikube"
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

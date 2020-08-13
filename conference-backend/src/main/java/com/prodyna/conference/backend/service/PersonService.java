@@ -29,16 +29,20 @@ public class PersonService {
     OrganizationRepository organizationRepository;
 
     public Person addPerson(PersonDTO personDTO) {
+        if (personRepository.existsByPersonId(personDTO.getPersonId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Person with [" + personDTO.getPersonId() + "] already exists.");
+        }
         Person person = mapToPerson(personDTO, new Person());
         return personRepository.save(person);
     }
 
-    public void deletePerson(Long id) {
-        personRepository.deleteById(id);
+    public void deletePerson(String id) {
+        personRepository.deleteByPersonId(id);
     }
 
-    public Person getPerson(Long id) {
-        Optional<Person> person = personRepository.findById(id);
+    public Person getPerson(String id) {
+        Optional<Person> person = personRepository.findByPersonId(id);
         if (!person.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Person found with id [" + id + "].");
@@ -53,8 +57,8 @@ public class PersonService {
         return persons;
     }
 
-    public Person updatePerson(Long id, PersonDTO personDTO) {
-        Optional<Person> personOptional = personRepository.findById(id);
+    public Person updatePerson(String id, PersonDTO personDTO) {
+        Optional<Person> personOptional = personRepository.findByPersonId(id);
         if (!personOptional.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Person found with id [" + id + "].");
@@ -63,8 +67,8 @@ public class PersonService {
         return personRepository.save(person);
     }
 
-    private Person addOrganization(Person person, Long organizationId) {
-        Optional<Organization> organization = organizationRepository.findById(organizationId);
+    private Person addOrganization(Person person, String organizationId) {
+        Optional<Organization> organization = organizationRepository.findByOrganizationId(organizationId);
         if (organization.isPresent()) {
             person.setOrganization(organization.get());
         } else {
@@ -74,6 +78,7 @@ public class PersonService {
     }
 
     private Person mapToPerson(PersonDTO personDTO, Person person) {
+        person.setPersonId(personDTO.getPersonId());
         person.setName(personDTO.getName());
         person = addOrganization(person, personDTO.getOrganizationId());
         return person;

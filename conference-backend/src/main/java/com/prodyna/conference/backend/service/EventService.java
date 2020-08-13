@@ -29,16 +29,20 @@ public class EventService {
     LocationRepository locationRepository;
 
     public Event addEvent(EventDTO eventDTO) {
+        if (eventRepository.existsByEventId(eventDTO.getEventId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Event with [" + eventDTO.getEventId() + "] already exists.");
+        }
         Event event = mapToEvent(eventDTO, new Event());
         return eventRepository.save(event);
     }
 
-    public void deleteEvent(Long id) {
-        eventRepository.deleteById(id);
+    public void deleteEvent(String id) {
+        eventRepository.deleteByEventId(id);
     }
 
-    public Event getEvent(Long id) {
-        Optional<Event> event = eventRepository.findById(id);
+    public Event getEvent(String id) {
+        Optional<Event> event = eventRepository.findByEventId(id);
         if (!event.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Event found with id [" + id + "].");
@@ -53,8 +57,8 @@ public class EventService {
         return events;
     }
 
-    public Event updateEvent(Long id, EventDTO eventDTO) {
-        Optional<Event> eventOptional = eventRepository.findById(id);
+    public Event updateEvent(String id, EventDTO eventDTO) {
+        Optional<Event> eventOptional = eventRepository.findByEventId(id);
         if (!eventOptional.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Event found with id [" + id + "].");
@@ -63,8 +67,8 @@ public class EventService {
         return eventRepository.save(event);
     }
 
-    private Event addLocation(Event event, Long locationId) {
-        Optional<Location> location = locationRepository.findById(locationId);
+    private Event addLocation(Event event, String locationId) {
+        Optional<Location> location = locationRepository.findByLocationId(locationId);
         if (location.isPresent()) {
             event.setLocation(location.get());
         } else {
@@ -74,6 +78,7 @@ public class EventService {
     }
 
     private Event mapToEvent(EventDTO eventDTO, Event event) {
+        event.setEventId(eventDTO.getEventId());
         event.setName(eventDTO.getName());
         event.setBegin(eventDTO.getBegin());
         event.setEnd(eventDTO.getEnd());

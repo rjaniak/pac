@@ -1,8 +1,6 @@
 package com.prodyna.conference.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.neo4j.ogm.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -12,8 +10,11 @@ import java.util.List;
  */
 @Data
 public class TopicDTO {
+    @NotBlank(message = "Topic id is mandatory")
+    private String topicId;
+
     @NotBlank(message = "Name is mandatory")
     private String name;
 
-    List<Long> parentTopicIds;
+    List<String> parentTopicIds;
 }

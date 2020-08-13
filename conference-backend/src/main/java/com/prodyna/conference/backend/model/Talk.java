@@ -20,6 +20,8 @@ public class Talk {
     @GeneratedValue
     private Long id;
 
+    private String talkId;
+
     private String title;
     private String date;
     private String startTime;

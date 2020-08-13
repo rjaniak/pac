@@ -92,4 +92,8 @@ resource "helm_release" "backend" {
     name = "servicemonitor.metadata.labels.release"
     value = helm_release.prometheus.name
   }
+  set {
+    name = "pod.host.aliases.ip"
+    value = var.minikube_ip
+  }
 }

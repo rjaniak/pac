@@ -1,11 +1,9 @@
 package com.prodyna.conference.backend.service;
 
-import com.prodyna.conference.backend.model.Location;
-import com.prodyna.conference.backend.model.Room;
-import com.prodyna.conference.backend.model.RoomDTO;
-import com.prodyna.conference.backend.model.TimeSlot;
+import com.prodyna.conference.backend.model.*;
 import com.prodyna.conference.backend.repository.LocationRepository;
 import com.prodyna.conference.backend.repository.RoomRepository;
+import com.prodyna.conference.backend.repository.TimeSlotRepository;
 import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,17 +31,24 @@ public class RoomService {
     @Autowired
     LocationRepository locationRepository;
 
+    @Autowired
+    TimeSlotRepository timeSlotRepository;
+
     public Room addRoom(RoomDTO roomDTO) {
+        if (roomRepository.existsByRoomId(roomDTO.getRoomId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Room with [" + roomDTO.getRoomId() + "] already exists.");
+        }
         Room room = mapToRoom(roomDTO, new Room());
         return roomRepository.save(room);
     }
 
-    public void deleteRoom(Long id) {
-        roomRepository.deleteById(id);
+    public void deleteRoom(String id) {
+        roomRepository.deleteByRoomId(id);
     }
 
-    public Room getRoom(Long id) {
-        Optional<Room> room = roomRepository.findById(id);
+    public Room getRoom(String id) {
+        Optional<Room> room = roomRepository.findByRoomId(id);
         if (!room.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Room found with id [" + id + "].");
@@ -58,11 +63,20 @@ public class RoomService {
         return rooms;
     }
 
-    public boolean isRoomAvailable(Room room, String date, LocalTime startTime, LocalTime endTime) {
+    public boolean isRoomAvailable(Talk talk, LocalTime startTime, LocalTime endTime) {
         boolean available = true;
-        List<TimeSlot> blockedTimeSlots = room.getTimeSlots();
+        List<TimeSlot> blockedTimeSlots = talk.getRoom().getTimeSlots();
         for (TimeSlot blockedTimeSlot : blockedTimeSlots) {
-            if (hasConflict(blockedTimeSlot, date, startTime, endTime)) {
+            Optional<TimeSlot> timeSlotOptional =
+                    timeSlotRepository.findByTimeSlotId(blockedTimeSlot.getTimeSlotId());
+            if (timeSlotOptional.isEmpty()) {
+                continue;
+            }
+            if (timeSlotOptional.get().getTalk().getTalkId().equals(talk.getTalkId())) {
+                // This timeSlot is from current talk, so ignore it
+                continue;
+            }
+            if (hasConflict(blockedTimeSlot, talk.getDate(), startTime, endTime)) {
                 available = false;
                 break;
             }
@@ -70,8 +84,8 @@ public class RoomService {
         return available;
     }
 
-    public Room updateRoom(Long id, RoomDTO roomDTO) {
-        Optional<Room> roomOptional = roomRepository.findById(id);
+    public Room updateRoom(String id, RoomDTO roomDTO) {
+        Optional<Room> roomOptional = roomRepository.findByRoomId(id);
         if (!roomOptional.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Room found with id [" + id + "].");
@@ -80,8 +94,8 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    private Room addLocation(Room room, Long locationId) {
-        Optional<Location> location = locationRepository.findById(locationId);
+    private Room addLocation(Room room, String locationId) {
+        Optional<Location> location = locationRepository.findByLocationId(locationId);
         if (location.isPresent()) {
             room.setLocation(location.get());
         } else {
@@ -98,13 +112,14 @@ public class RoomService {
         LocalTime blockedTimeSlotEnd = LocalTime.parse(timeSlot.getEndTime(), DateTimeFormatter.ISO_TIME);
 
         if (endTime.compareTo(blockedTimeSlotStart) <= 0 || startTime.compareTo(blockedTimeSlotEnd) >= 0) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 
     private Room mapToRoom(RoomDTO roomDTO, Room room) {
+        room.setRoomId(roomDTO.getRoomId());
         room.setName(roomDTO.getName());
         room = addLocation(room, roomDTO.getLocationId());
         return room;

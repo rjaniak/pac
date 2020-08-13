@@ -9,6 +9,9 @@ import javax.validation.constraints.NotBlank;
  */
 @Data
 public class LocationDTO {
+    @NotBlank(message = "Location id is mandatory")
+    private String locationId;
+
     @NotBlank(message = "Name is mandatory")
     private String name;
 }

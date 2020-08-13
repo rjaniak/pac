@@ -10,6 +10,9 @@ import java.util.List;
  */
 @Data
 public class TalkDTO {
+    @NotBlank(message = "Talk id is mandatory")
+    private String talkId;
+
     @NotBlank(message = "Title is mandatory")
     private String title;
 
@@ -17,7 +20,7 @@ public class TalkDTO {
             message = "Date must have pattern yyyy-MM-dd")
     private String date;
 
-    @Pattern(regexp = "^([2][0-3]|[0-1][0-9]|[1-9]):[0-5][0-9]:([0-5][0-9]|[6][0])$",
+    @Pattern(regexp = "^([2][0-3]|[0-1][0-9]|[1-9]):[0-5][0-9]$",
             message = "Start time must have pattern HH:mm")
     private String startTime;
 
@@ -30,12 +33,12 @@ public class TalkDTO {
     private String level;
 
     @NotNull(message = "Event ID is mandatory")
-    Long eventId;
+    String eventId;
 
-    List<Long> personIds;
+    List<String> personIds;
 
     @NotNull(message = "Room ID is mandatory")
-    Long roomId;
+    String roomId;
 
-    List<Long> topicIds;
+    List<String> topicIds;
 }

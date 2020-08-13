@@ -20,6 +20,8 @@ public class Organization {
     @GeneratedValue
     private Long id;
 
+    private String organizationId;
+
     private String name;
 
     @JsonIgnoreProperties({"organization", "talks"})

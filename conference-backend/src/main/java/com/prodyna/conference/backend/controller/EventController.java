@@ -33,7 +33,7 @@ public class EventController {
     }
 
     @GetMapping("{id}")
-    public Event getEvent(@PathVariable Long id) {
+    public Event getEvent(@PathVariable String id) {
         return eventService.getEvent(id);
     }
 
@@ -46,14 +46,14 @@ public class EventController {
 
     @PutMapping("{id}")
     @Secured("ROLE_USER")
-    public Event updateEvent(@PathVariable Long id, @Valid @RequestBody EventDTO eventDTO, Errors errors) {
+    public Event updateEvent(@PathVariable String id, @Valid @RequestBody EventDTO eventDTO, Errors errors) {
         validate(eventDTO, errors);
         return eventService.updateEvent(id, eventDTO);
     }
 
     @DeleteMapping("{id}")
     @Secured("ROLE_USER")
-    public void deleteEvent(@PathVariable Long id) {
+    public void deleteEvent(@PathVariable String id) {
         eventService.deleteEvent(id);
     }
 

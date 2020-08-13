@@ -11,6 +11,9 @@ import javax.validation.constraints.Pattern;
  */
 @Data
 public class EventDTO {
+    @NotBlank(message = "Event id is mandatory")
+    private String eventId;
+
     @NotBlank(message = "Name is mandatory")
     private String name;
 
@@ -23,5 +26,5 @@ public class EventDTO {
     private String end;
 
     @NotNull(message = "Location ID is mandatory")
-    Long locationId;
+    String locationId;
 }

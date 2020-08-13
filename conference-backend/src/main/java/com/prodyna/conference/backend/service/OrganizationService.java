@@ -26,17 +26,22 @@ public class OrganizationService {
     OrganizationRepository organizationRepository;
 
     public Organization addOrganization(OrganizationDTO organizationDTO) {
+        if (organizationRepository.existsByOrganizationId(organizationDTO.getOrganizationId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Organization with [" + organizationDTO.getOrganizationId() + "] already exists.");
+        }
         Organization organization = new Organization();
+        organization.setOrganizationId(organizationDTO.getOrganizationId());
         organization.setName(organizationDTO.getName());
         return organizationRepository.save(organization);
     }
 
-    public void deleteOrganization(Long id) {
-        organizationRepository.deleteById(id);
+    public void deleteOrganization(String id) {
+        organizationRepository.deleteByOrganizationId(id);
     }
 
-    public Organization getOrganization(Long id) {
-        Optional<Organization> organization = organizationRepository.findById(id);
+    public Organization getOrganization(String id) {
+        Optional<Organization> organization = organizationRepository.findByOrganizationId(id);
         if (!organization.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Organization found with id [" + id + "].");
@@ -51,13 +56,14 @@ public class OrganizationService {
         return organizations;
     }
 
-    public Organization updateOrganization(Long id, OrganizationDTO organizationDTO) {
-        Optional<Organization> organizationOptional = organizationRepository.findById(id);
+    public Organization updateOrganization(String id, OrganizationDTO organizationDTO) {
+        Optional<Organization> organizationOptional = organizationRepository.findByOrganizationId(id);
         if (!organizationOptional.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Organization found with id [" + id + "].");
         }
         Organization organization = organizationOptional.get();
+        organization.setOrganizationId(organizationDTO.getOrganizationId());
         organization.setName(organizationDTO.getName());
         return organizationRepository.save(organization);
     }

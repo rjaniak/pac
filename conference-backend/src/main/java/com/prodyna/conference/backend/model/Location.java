@@ -20,6 +20,8 @@ public class Location {
     @GeneratedValue
     private Long id;
 
+    private String locationId;
+
     private String name;
 
     @JsonIgnoreProperties({"location", "talks"})

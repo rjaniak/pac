@@ -30,7 +30,7 @@ public class RoomController {
     }
 
     @GetMapping("{id}")
-    public Room getRoom(@PathVariable Long id) {
+    public Room getRoom(@PathVariable String id) {
         return roomService.getRoom(id);
     }
 
@@ -43,14 +43,14 @@ public class RoomController {
 
     @PutMapping("{id}")
     @Secured("ROLE_USER")
-    public Room updateRoom(@PathVariable Long id, @Valid @RequestBody RoomDTO roomDTO, Errors errors) {
+    public Room updateRoom(@PathVariable String id, @Valid @RequestBody RoomDTO roomDTO, Errors errors) {
         validate(roomDTO, errors);
         return roomService.updateRoom(id, roomDTO);
     }
 
     @DeleteMapping("{id}")
     @Secured("ROLE_USER")
-    public void deleteRoom(@PathVariable Long id) {
+    public void deleteRoom(@PathVariable String id) {
         roomService.deleteRoom(id);
     }
 

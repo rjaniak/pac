@@ -48,21 +48,26 @@ public class TalkService {
     TopicRepository topicRepository;
 
     public Talk addTalk(TalkDTO talkDTO) {
+        if (talkRepository.existsByTalkId(talkDTO.getTalkId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Talk with [" + talkDTO.getTalkId() + "] already exists.");
+        }
         Talk talk = mapToTalk(talkDTO, new Talk());
+        talk = addTimeSlot(talk, false);
         return talkRepository.save(talk);
     }
 
-    public void deleteTalk(Long talkId) {
-        Optional<Talk> talkOptional = talkRepository.findById(talkId);
+    public void deleteTalk(String talkId) {
+        Optional<Talk> talkOptional = talkRepository.findByTalkId(talkId);
         if (talkOptional.isPresent()) {
             Talk talk = talkOptional.get();
             timeSlotRepository.delete(talk.getTimeSlot());
-            talkRepository.deleteById(talkId);
+            talkRepository.deleteByTalkId(talkId);
         }
     }
 
-    public Talk getTalk(Long id) {
-        Optional<Talk> talk = talkRepository.findById(id);
+    public Talk getTalk(String id) {
+        Optional<Talk> talk = talkRepository.findByTalkId(id);
         if (!talk.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Talk found with id [" + id + "].");
@@ -77,18 +82,19 @@ public class TalkService {
         return talks;
     }
 
-    public Talk updateTalk(Long id, TalkDTO talkDTO) {
-        Optional<Talk> talkOptional = talkRepository.findById(id);
+    public Talk updateTalk(String id, TalkDTO talkDTO) {
+        Optional<Talk> talkOptional = talkRepository.findByTalkId(id);
         if (!talkOptional.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "No Talk found with id [" + id + "].");
         }
         Talk talk = mapToTalk(talkDTO, talkOptional.get());
+        talk = addTimeSlot(talk, true);
         return talkRepository.save(talk);
     }
 
-    private Talk addEvent(Talk talk, Long eventId) {
-        Optional<Event> event = eventRepository.findById(eventId);
+    private Talk addEvent(Talk talk, String eventId) {
+        Optional<Event> event = eventRepository.findByEventId(eventId);
         if (event.isPresent()) {
             talk.setEvent(event.get());
         } else {
@@ -98,16 +104,16 @@ public class TalkService {
         return talk;
     }
 
-    private Talk addPersons(Talk talk, List<Long> personIds) {
-        Iterable<Person> persons = personRepository.findAllById(personIds);
+    private Talk addPersons(Talk talk, List<String> personIds) {
+        Iterable<Person> persons = personRepository.findAllByPersonIds(personIds);
         List<Person> personList = new ArrayList<>();
         persons.forEach(personList::add);
         talk.setPersons(personList);
         return talk;
     }
 
-    private Talk addRoom(Talk talk, Long roomId) {
-        Optional<Room> room = roomRepository.findById(roomId);
+    private Talk addRoom(Talk talk, String roomId) {
+        Optional<Room> room = roomRepository.findByRoomId(roomId);
         if (room.isPresent()) {
             talk.setRoom(room.get());
         } else {
@@ -117,8 +123,8 @@ public class TalkService {
         return talk;
     }
 
-    private Talk addTopics(Talk talk, List<Long> topicIds) {
-        Iterable<Topic> topics = topicRepository.findAllById(topicIds);
+    private Talk addTopics(Talk talk, List<String> topicIds) {
+        Iterable<Topic> topics = topicRepository.findAllByTopicIds(topicIds);
         List<Topic> topicList = new ArrayList<>();
         topics.forEach(topicList::add);
         talk.setTopics(topicList);
@@ -126,6 +132,7 @@ public class TalkService {
     }
 
     private Talk mapToTalk(TalkDTO talkDTO, Talk talk) {
+        talk.setTalkId(talkDTO.getTalkId());
         talk.setTitle(talkDTO.getTitle());
         talk.setDate(talkDTO.getDate());
         talk.setStartTime(talkDTO.getStartTime());
@@ -136,18 +143,22 @@ public class TalkService {
         talk = addPersons(talk, talkDTO.getPersonIds());
         talk = addRoom(talk, talkDTO.getRoomId());
         talk = addTopics(talk, talkDTO.getTopicIds());
-        talk = addTimeSlot(talk);
         return talk;
     }
 
-    private Talk addTimeSlot(Talk talk) {
+    private Talk addTimeSlot(Talk talk, boolean onlyUpdate) {
         LocalTime startTime = LocalTime.parse(talk.getStartTime(), DateTimeFormatter.ISO_TIME);
         LocalTime endTime = startTime.plusMinutes(talk.getDuration());
-        if (!roomService.isRoomAvailable(talk.getRoom(), talk.getDate(), startTime, endTime)) {
+        if (!roomService.isRoomAvailable(talk, startTime, endTime)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "The requested time slot is already blocked. Please choose different time.");
         }
-        TimeSlot timeSlot = timeSlotService.addTimeSlot(talk, startTime, endTime);
+        TimeSlot timeSlot;
+        if (onlyUpdate) {
+            timeSlot = timeSlotService.updateTimeSlot(talk, startTime, endTime);
+        } else {
+            timeSlot = timeSlotService.addTimeSlot(talk, startTime, endTime);
+        }
         talk.setTimeSlot(timeSlot);
         return talk;
     }

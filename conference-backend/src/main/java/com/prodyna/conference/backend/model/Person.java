@@ -20,6 +20,8 @@ public class Person {
     @GeneratedValue
     private Long id;
 
+    private String personId;
+
     private String name;
 
     @JsonIgnoreProperties("persons")
