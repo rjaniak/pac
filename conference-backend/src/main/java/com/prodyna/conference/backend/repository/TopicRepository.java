@@ -16,6 +16,9 @@ public interface TopicRepository extends Neo4jRepository<Topic, Long> {
 
     boolean existsByTopicId(String id);
 
+    @Query("MATCH (:Event{eventId: $eventId})<-[:PART_OF]-(talk:Talk)-[:IS_ABOUT]-(topic:Topic) RETURN topic")
+    Iterable<Topic> findAllByEventId(String eventId);
+
     @Query("match (n:Topic) where n.topicId in $ids return n")
     Iterable<Topic> findAllByTopicIds(Iterable<String> ids);
 

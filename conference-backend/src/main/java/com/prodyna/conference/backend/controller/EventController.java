@@ -2,7 +2,9 @@ package com.prodyna.conference.backend.controller;
 
 import com.prodyna.conference.backend.model.Event;
 import com.prodyna.conference.backend.model.EventDTO;
+import com.prodyna.conference.backend.model.Topic;
 import com.prodyna.conference.backend.service.EventService;
+import com.prodyna.conference.backend.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
@@ -27,6 +29,9 @@ public class EventController {
     @Autowired
     EventService eventService;
 
+    @Autowired
+    TopicService topicService;
+
     @GetMapping
     public List<Event> getEvents() {
         return eventService.getEvents();
@@ -35,6 +40,11 @@ public class EventController {
     @GetMapping("{id}")
     public Event getEvent(@PathVariable String id) {
         return eventService.getEvent(id);
+    }
+
+    @GetMapping("{id}/topics")
+    public List<Topic> getEventTopics(@PathVariable String id) {
+        return topicService.getTopicsByEventId(id);
     }
 
     @PostMapping

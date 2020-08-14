@@ -54,6 +54,13 @@ public class TopicService {
         return topics;
     }
 
+    public List<Topic> getTopicsByEventId(String eventId) {
+        List<Topic> topics = new ArrayList<>();
+        Iterable<Topic> allTopics = topicRepository.findAllByEventId(eventId);
+        allTopics.forEach(topics::add);
+        return topics;
+    }
+
     public Topic updateTopic(String id, TopicDTO topicDTO) {
         Optional<Topic> topicOptional = topicRepository.findByTopicId(id);
         if (!topicOptional.isPresent()) {

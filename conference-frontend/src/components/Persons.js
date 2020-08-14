@@ -25,7 +25,9 @@ class Persons extends Component {
             <div>
                 <ul>
                     {this.state.persons.map((person) => (
-                        <li key={person.id}>{person.name}</li>
+                        <li key={person.id}>
+                            <h5>{person.name} ({person.organization.name})</h5>
+                        </li>
                     ))}
                 </ul>
             </div>

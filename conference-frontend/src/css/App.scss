@@ -13,9 +13,19 @@
 nav {
     margin-bottom: 20px;
 
-    a {
+    .navbar-nav {
+        width: 100%;
+    }
+
+    a, button {
         font-size: 24px;
         font-weight: bold;
+    }
+
+    button {
+        background-color: inherit;
+        border: none;
+        outline: none !important;
     }
 }
 .main-content {
