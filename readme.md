@@ -11,7 +11,7 @@
 	- Helm: v3.2.1  
 	- Terraform: v0.12.26  
 
-- While testing, please use Chrome with "ignore-certificate-errors" coniguration, because the self-signed TLS certificate isn't trusted by a CA:  
+- While testing, please use Chrome with "ignore-certificate-errors" configuration, because the self-signed TLS certificate isn't trusted by a CA:  
 
     open -g -a Google\ Chrome --args --ignore-certificate-errors --ignore-urlfetcher-cert-requests
 
