@@ -4,19 +4,6 @@ resource "kubernetes_namespace" "backend" {
   }
 }
 
-/*resource "kubernetes_secret" "dockerhub-pullsecret" {
-  metadata {
-    name = "dockerhub-pullsecret"
-    namespace = kubernetes_namespace.backend.metadata[0].name
-  }
-
-  data = {
-    ".dockerconfigjson" = file("docker/config.json")
-  }
-
-  type = "kubernetes.io/dockerconfigjson"
-}*/
-
 data "template_file" "backend-properties" {
   template = file("resources/backend.properties")
 
