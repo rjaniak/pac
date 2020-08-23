@@ -1,7 +1,6 @@
 image:
-  # TODO: from harbor.prodyna.com
-  repository: rjaniak/private/conference-backend
-  pullPolicy: IfNotPresent
+  repository: rjaniak/pac2020/conference-backend
+  pullPolicy: Always
 serviceAccount:
   name: backend
 autoscaling:

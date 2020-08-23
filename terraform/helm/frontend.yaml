@@ -1,7 +1,6 @@
 image:
-  # TODO: from harbor.prodyna.com
-  repository: rjaniak/private/conference-frontend
-  pullPolicy: IfNotPresent
+  repository: rjaniak/pac2020/conference-frontend
+  pullPolicy: Always
 autoscaling:
   enabled: true
   minReplicas: 1
