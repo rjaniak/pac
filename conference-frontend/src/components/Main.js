@@ -3,29 +3,21 @@ import {BrowserRouter as Router, NavLink, Route, Switch, Redirect} from "react-r
 import Home from "./Home";
 import Events from "./Events";
 import Persons from "./Persons";
+import PersonDetails from "./PersonDetails";
+import TalkDetails from "./TalkDetails";
+import RenameTalk from "./RenameTalk";
+import EventDayOverview from "./EventDayOverview";
 
 class Main extends Component {
-    login() {
-        this.props.keycloakState.keycloak.login().then(authenticated => {
-            return (
-                <Redirect to="/" />
-            )
-        })
-    }
-
-    logout() {
-        this.props.keycloakState.keycloak.logout()
-    }
-
     render() {
         let keycloakState = this.props.keycloakState
         let loginNavButton
         if (!keycloakState.initialized) {
             loginNavButton = ''
         } else if (keycloakState.authenticated) {
-            loginNavButton = <button className="nav-item nav-link" onClick={() => this.logout()}>Logout</button>
+            loginNavButton = <button className="nav-item nav-link" onClick={() => this._logout()}>Logout</button>
         } else {
-            loginNavButton = <button className="nav-item nav-link" onClick={() => this.login()}>Login</button>
+            loginNavButton = <button className="nav-item nav-link" onClick={() => this._login()}>Login</button>
         }
 
         let mainContent
@@ -36,17 +28,22 @@ class Main extends Component {
                         <Route exact path="/">
                             <Home keycloakState={keycloakState} />
                         </Route>
-                        <Route path="/events">
-                            <Events keycloakState={keycloakState} />
-                        </Route>
-                        <Route path="/persons">
-                            <Persons keycloakState={keycloakState} />
-                        </Route>
+                        <Route exact path="/events" component={Events} />
+                        <Route exact path="/events/details" component={EventDayOverview} />
+                        <Route exact path="/persons" component={Persons} />
+                        <Route exact path="/persons/details" component={PersonDetails} />
+                        <Route exact path="/talks/details" render={(props) =>
+                            <TalkDetails {...props} keycloakState={keycloakState} />
+                        } />
+                        <Route exact path="/talks/edit" render={(props) =>
+                            <RenameTalk {...props} keycloakState={keycloakState} />
+                        } />
                         <Redirect to="/" />
                     </Switch>
-            </div>
+                </div>
         } else {
-            mainContent = <div className="main-content">
+            mainContent =
+                <div className="main-content">
                     Loading...
                 </div>
         }
@@ -67,6 +64,16 @@ class Main extends Component {
                 {mainContent}
             </Router>
         )
+    }
+
+    _login = () => {
+        let redirect = window.location.protocol + '//' + window.location.host + '/';
+        this.props.keycloakState.keycloak.login({redirectUri: redirect})
+    }
+
+    _logout = () => {
+        let redirect = window.location.protocol + '//' + window.location.host + '/';
+        this.props.keycloakState.keycloak.logout({redirectUri: redirect})
     }
 };
 

@@ -1,11 +1,11 @@
 id,title,date,startTime,duration,language,level,eventId,personIds,roomId,timeSlotId,topicIds
-digitaletransformation,Digitale Transformation,2020-10-03,10:00,60,Deutsch,Basic,prodynatechchallenge,guidoaushilfe,largeroom,largeroom-2020-10-03-10:00,kubernetes
-cloudnative,Cloud Native Computing - Containers & Kubernetes,2020-10-03,11:00,60,English,Advanced,prodynatechchallenge,guidoaushilfe;hansfritz;jimpanse,largeroom,largeroom-2020-10-03-11:00,kubernetes
-migrationcloud,Migration in die Azure Cloud,2020-10-03,12:00,60,Deutsch,Advanced,prodynatechchallenge,guidoaushilfe;jimpanse,largeroom,largeroom-2020-10-03-12:00,java;kubernetes
-prodynatechreview,PRODYNA Tech Challenge Review,2020-10-03,10:00,60,English,Basic,prodynatechchallenge,hansfritz;handwerker,smallroom,smallroom-2020-10-03-10:00,java;springboot;backend
-pacfinal,PAC Final Block,2020-10-03,12:00,60,Deutsch,Expert,prodynatechchallenge,handwerker,smallroom,smallroom-2020-10-03-12:00,kubernetes;springboot;neo4j
-advantagesgraphdb,Advantages of Using a Graph Database,2020-10-04,10:00,60,English,Expert,prodynatechchallenge,guidoaushilfe;hansfritz;handwerker,largeroom,largeroom-2020-10-04-10:00,graphdb;neo4j
-whygraphdb,Why does My Enterprise Need a Graph Database?,2020-10-04,13:00,60,English,Advanced,prodynatechchallenge,guidoaushilfe;hansfritz,smallroom,smallroom-2020-10-04-13:00,graphdb;neo4j
-anytalk2,Any Talk for second event,2020-10-10,10:00,60,English,Basic,liferaypartnerevent,guidoaushilfe;hansfritz,largeroom,largeroom-2020-10-10-10:00,java;springboot;backend
-anytalk3,Any Talk for third event,2020-10-17,10:00,60,English,Basic,neo4jgraphtour,guidoaushilfe;hansfritz;jimpanse,frankfurtroom1,frankfurtroom1-2020-10-17-10:00,kubernetes
-anytalk4,Any Talk for fourth event,2020-10-24,10:00,60,English,Basic,itcstech,jimpanse;handwerker;justincase,frankfurtroom2,frankfurtroom2-2020-10-24-10:00,neo4j
+digitaletransformation,Digitale Transformation,2020-10-03,10:00,60,Deutsch,Basic,prodynatechchallenge,ralfjaniak,largeroom,largeroom-2020-10-03-10:00,kubernetes
+cloudnative,Cloud Native Computing - Containers & Kubernetes,2020-10-03,11:00,60,English,Advanced,prodynatechchallenge,ralfjaniak;fabiansiems;buenyaminsever,largeroom,largeroom-2020-10-03-11:00,kubernetes
+migrationcloud,Migration in die Azure Cloud,2020-10-03,12:00,60,Deutsch,Advanced,prodynatechchallenge,ralfjaniak;buenyaminsever,largeroom,largeroom-2020-10-03-12:00,java;kubernetes
+prodynatechreview,PRODYNA Tech Challenge Review,2020-10-03,10:00,60,English,Basic,prodynatechchallenge,fabiansiems;andreasheizenreder,smallroom,smallroom-2020-10-03-10:00,java;springboot;backend
+pacfinal,PAC Final Block,2020-10-03,12:00,60,Deutsch,Expert,prodynatechchallenge,andreasheizenreder,smallroom,smallroom-2020-10-03-12:00,kubernetes;springboot;neo4j
+advantagesgraphdb,Advantages of Using a Graph Database,2020-10-04,10:00,60,English,Expert,prodynatechchallenge,ralfjaniak;fabiansiems;andreasheizenreder,largeroom,largeroom-2020-10-04-10:00,graphdb;neo4j
+whygraphdb,Why does My Enterprise Need a Graph Database?,2020-10-04,13:00,60,English,Advanced,prodynatechchallenge,ralfjaniak;fabiansiems,smallroom,smallroom-2020-10-04-13:00,graphdb;neo4j
+anytalk2,Any Talk for second event,2020-10-10,10:00,60,English,Basic,liferaypartnerevent,ralfjaniak;fabiansiems,largeroom,largeroom-2020-10-10-10:00,java;springboot;backend
+anytalk3,Any Talk for third event,2020-10-17,10:00,60,English,Basic,neo4jgraphtour,ralfjaniak;fabiansiems;buenyaminsever,frankfurtroom1,frankfurtroom1-2020-10-17-10:00,kubernetes
+anytalk4,Any Talk for fourth event,2020-10-24,10:00,60,English,Basic,itcstech,buenyaminsever;andreasheizenreder;paulschell,frankfurtroom2,frankfurtroom2-2020-10-24-10:00,neo4j

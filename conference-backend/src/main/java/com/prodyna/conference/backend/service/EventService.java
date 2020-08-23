@@ -5,6 +5,7 @@ import com.prodyna.conference.backend.repository.EventRepository;
 import com.prodyna.conference.backend.repository.LocationRepository;
 import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +53,7 @@ public class EventService {
 
     public List<Event> getEvents() {
         List<Event> events = new ArrayList<>();
-        Iterable<Event> allEvents = eventRepository.findAll();
+        Iterable<Event> allEvents = eventRepository.findAll(Sort.by("begin"));
         allEvents.forEach(events::add);
         return events;
     }

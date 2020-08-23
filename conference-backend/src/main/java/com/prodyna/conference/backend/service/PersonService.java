@@ -5,6 +5,7 @@ import com.prodyna.conference.backend.repository.OrganizationRepository;
 import com.prodyna.conference.backend.repository.PersonRepository;
 import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +53,7 @@ public class PersonService {
 
     public List<Person> getPersons() {
         List<Person> persons = new ArrayList<>();
-        Iterable<Person> allPersons = personRepository.findAll();
+        Iterable<Person> allPersons = personRepository.findAll(Sort.by("name"));
         allPersons.forEach(persons::add);
         return persons;
     }

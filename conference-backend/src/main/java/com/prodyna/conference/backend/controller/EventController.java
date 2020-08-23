@@ -2,8 +2,10 @@ package com.prodyna.conference.backend.controller;
 
 import com.prodyna.conference.backend.model.Event;
 import com.prodyna.conference.backend.model.EventDTO;
+import com.prodyna.conference.backend.model.Talk;
 import com.prodyna.conference.backend.model.Topic;
 import com.prodyna.conference.backend.service.EventService;
+import com.prodyna.conference.backend.service.TalkService;
 import com.prodyna.conference.backend.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,9 @@ public class EventController {
     EventService eventService;
 
     @Autowired
+    TalkService talkService;
+
+    @Autowired
     TopicService topicService;
 
     @GetMapping
@@ -40,6 +45,11 @@ public class EventController {
     @GetMapping("{id}")
     public Event getEvent(@PathVariable String id) {
         return eventService.getEvent(id);
+    }
+
+    @GetMapping("{id}/talks")
+    public List<Talk> getEventTalks(@PathVariable String id) {
+        return talkService.getTalksByEventId(id);
     }
 
     @GetMapping("{id}/topics")

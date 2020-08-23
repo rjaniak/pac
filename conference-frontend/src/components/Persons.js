@@ -25,13 +25,23 @@ class Persons extends Component {
             <div>
                 <ul>
                     {this.state.persons.map((person) => (
-                        <li key={person.id}>
-                            <h5>{person.name} ({person.organization.name})</h5>
+                        <li className='h5' key={person.id}>
+                            <span className='link person' onClick={() => this._handlePersonClick(person)}>{person.name}</span>
+                            ({person.organization.name})
                         </li>
                     ))}
                 </ul>
             </div>
         )
+    }
+
+    _handlePersonClick = (person) => {
+        this.props.history.push({
+            pathname: '/persons/details',
+            state: {
+                person: person
+            }
+        });
     }
 };
 

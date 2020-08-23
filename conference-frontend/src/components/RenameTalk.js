@@ -1,31 +1,79 @@
 import React, {Component} from 'react'
 import axios from "axios";
 import Config from "../config";
+import {Redirect} from "react-router-dom";
 
 class RenameTalk extends Component {
     constructor(props) {
         super(props);
-        this.state = {value: ''};
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        let talk = ''
+        let title = ''
+        if (this.props.location.state && this.props.location.state.talk) {
+            talk = this.props.location.state.talk
+            title = talk.title
+        }
+        this.state = {
+            talk: talk,
+            newTitle: title,
+            showSuccessMessage: false,
+            showErrorMessage: false
+        }
+
+        this._handleChange = this._handleChange.bind(this);
+        this._handleSubmit = this._handleSubmit.bind(this);
     }
 
-    handleChange = event => {
+    render() {
+        if (!this.state.talk) {
+            return <Redirect to='/'/>
+        }
+
+        let message = ''
+        if (this.state.showSuccessMessage) {
+            message = <div className='alert alert-success'>Update was successful!</div>
+        } else if (this.state.showErrorMessage) {
+            message = <div className='alert alert-danger'>Update failed, please try again later.</div>
+        }
+
+        return (
+            <div className="update-talk-name">
+                {message}
+                <p>Here you can edit the talk name:</p>
+                <form onSubmit={this._handleSubmit}>
+                    <label>
+                        New talk name:
+                        <input type="text" value={this.state.newTitle} onChange={this._handleChange} />
+                    </label>
+                    <input type="submit" value="Submit" />
+                </form>
+            </div>
+        )
+    }
+
+    _handleChange = event => {
         this.setState({
-            value: event.target.value
+            newTitle: event.target.value
         });
     }
 
-    handleSubmit(event) {
+    _handleSubmit(event) {
         event.preventDefault();
 
         let token = this.props.keycloakState.keycloak.token
-        let talk = this.props.talk
 
-        talk.name = this.state.value
+        let talk = this.state.talk
+        talk.title = this.state.newTitle
+        talk.eventId = talk.event.eventId
+        talk.roomId = talk.room.roomId
+        talk.personIds = talk.persons.map(function (person) {
+            return person.personId
+        })
+        talk.topicIds = talk.topics.map(function (topic) {
+            return topic.topicId
+        })
 
-        axios.post(Config.BACKEND_BASE_URL + '/talks/' + talk.talkId,
+        axios.put(Config.BACKEND_BASE_URL + '/talks/' + talk.talkId,
             talk,
             {
                 headers: {
@@ -33,24 +81,17 @@ class RenameTalk extends Component {
                 }
             })
             .then(data => {
-                console.log(data);
+                this.setState({
+                    showSuccessMessage: true,
+                    showErrorMessage: false
+                })
             })
-    }
-
-    render() {
-        let talk = this.props.talk
-        return (
-            <div className="update-talk-name">
-                <p>Here you can update the name of the existing talk "{talk.name}":</p>
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        New talk name:
-                        <input type="text" value={this.state.value} onChange={this.handleChange} />
-                    </label>
-                    <input type="submit" value="Submit" />
-                </form>
-            </div>
-        )
+            .catch(error => {
+                this.setState({
+                    showSuccessMessage: false,
+                    showErrorMessage: true
+                })
+            })
     }
 };
 

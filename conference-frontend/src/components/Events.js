@@ -15,14 +15,42 @@ class Events extends Component {
         axios
             .get(Config.BACKEND_BASE_URL + '/events')
             .then(({ data }) => {
-                this.setEventsData(data)
+                this._setEventsData(data)
             })
             .catch(error => {
                 this.setState({ events: [] })
             })
     }
 
-    setEventsData(events) {
+    render() {
+        return (
+            <div>
+                <ul>
+                    {this.state.events.map((event) => (
+                        <li key={event.id}>
+                            <span className='h5 link' onClick={() => this._handleEventClick(event)}>{event.name}</span>
+                            <ul>
+                                <li><strong>Date</strong>: {event.begin} - {event.end}</li>
+                                <li><strong>Location</strong>: {event.location.name}</li>
+                                <li><strong>Topics</strong>: {event.topicList}</li>
+                            </ul>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )
+    }
+
+    _handleEventClick = (event) => {
+        this.props.history.push({
+            pathname: '/events/details',
+            state: {
+                event: event
+            }
+        })
+    }
+
+    _setEventsData(events) {
         // Also get topics for events
         for (let i = 0; i < events.length; i++) {
             axios
@@ -48,25 +76,6 @@ class Events extends Component {
         this.setState({
             events: events
         })
-    }
-
-    render() {
-        return (
-            <div>
-                <ul>
-                    {this.state.events.map((event) => (
-                        <li key={event.id}>
-                            <h5>{event.name}</h5>
-                            <ul>
-                                <li><strong>Date</strong>: {event.begin} - {event.end}</li>
-                                <li><strong>Location</strong>: {event.location.name}</li>
-                                <li><strong>Topics</strong>: {event.topicList}</li>
-                            </ul>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        )
     }
 };
 

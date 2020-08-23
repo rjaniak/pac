@@ -1,5 +1,5 @@
 core:
-  standalone: true
+#  standalone: true
   persistentVolume:
     size: 1Gi
   additionalVolumes:

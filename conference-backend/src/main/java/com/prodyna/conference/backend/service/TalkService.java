@@ -82,6 +82,16 @@ public class TalkService {
         return talks;
     }
 
+    public List<Talk> getTalksByEventId(String eventId) {
+        List<Talk> talks = new ArrayList<>();
+        Iterable<Talk> allTalks = talkRepository.findAllByEventId(eventId);
+        for(Talk nextTalk: allTalks) {
+            Talk talk = talkRepository.findByTalkId(nextTalk.getTalkId()).get();
+            talks.add(talk);
+        }
+        return talks;
+    }
+
     public Talk updateTalk(String id, TalkDTO talkDTO) {
         Optional<Talk> talkOptional = talkRepository.findByTalkId(id);
         if (!talkOptional.isPresent()) {
@@ -113,9 +123,16 @@ public class TalkService {
     }
 
     private Talk addRoom(Talk talk, String roomId) {
-        Optional<Room> room = roomRepository.findByRoomId(roomId);
-        if (room.isPresent()) {
-            talk.setRoom(room.get());
+        Optional<Room> roomOptional = roomRepository.findByRoomId(roomId);
+        if (roomOptional.isPresent()) {
+            // Check if given room is in same location as the given event
+            Room room = roomOptional.get();
+            if (!talk.getEvent().getLocation().getLocationId().equals(room.getLocation().getLocationId())) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "Selected room with id [" + roomId
+                        + "] must be in same location as event with id [" + talk.getEvent().getEventId() + "].");
+            }
+            talk.setRoom(room);
         } else {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "A talk must have an room. No Room found with id [" + roomId + "].");
@@ -146,7 +163,7 @@ public class TalkService {
         return talk;
     }
 
-    private Talk addTimeSlot(Talk talk, boolean onlyUpdate) {
+    private Talk addTimeSlot(Talk talk, boolean isUpdate) {
         LocalTime startTime = LocalTime.parse(talk.getStartTime(), DateTimeFormatter.ISO_TIME);
         LocalTime endTime = startTime.plusMinutes(talk.getDuration());
         if (!roomService.isRoomAvailable(talk, startTime, endTime)) {
@@ -154,7 +171,7 @@ public class TalkService {
                     HttpStatus.BAD_REQUEST, "The requested time slot is already blocked. Please choose different time.");
         }
         TimeSlot timeSlot;
-        if (onlyUpdate) {
+        if (isUpdate) {
             timeSlot = timeSlotService.updateTimeSlot(talk, startTime, endTime);
         } else {
             timeSlot = timeSlotService.addTimeSlot(talk, startTime, endTime);
