@@ -1,6 +1,6 @@
 image:
   repository: rjaniak/pac2020
-  tag: conference-backend-1.0
+  tag: conference-frontend-1.0
   pullPolicy: Always
 autoscaling:
   enabled: true
