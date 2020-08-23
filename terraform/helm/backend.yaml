@@ -1,5 +1,6 @@
 image:
-  repository: rjaniak/pac2020/conference-backend
+  repository: rjaniak/pac2020
+  tag: conference-backend-1.0
   pullPolicy: Always
 serviceAccount:
   name: backend
